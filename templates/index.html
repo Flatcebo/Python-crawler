@@ -1,75 +1,15 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
   <head>
     <title>Flask Web App</title>
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="/static/aaa.js"
+    ></script>
   </head>
   <body>
-    <div>
-      {% if data %} {% for item in data.items %}
-      <h1>{{ item.listName }} {{ item.listUserId }}</h1>
-      {% if detailON %}
-      <div>
-        <button>
-          <h2>{{ item.listSubject }}</h2>
-          <div></div>
-        </button>
-      </div>
-      {% else %}
-      <div>
-        <button onclick="showDetail()">
-          <h2>{{ item.listSubject }}</h2>
-        </button>
-      </div>
-      {% endif %}
-      <h4>{{ item.listDate }}</h4>
-      {% endfor %} {% endif %} {% if etc %} {% for value in etc %}
-      <div class="overflow-y-scroll border-t-[50px] border-[#0000ff56]">
-        <div class="">
-          <div class="m-[10px]">{{ value.detailDesc }}</div>
-        </div>
-      </div>
-      {% endfor %} {% endif %}
-    </div>
-
-    <div class="flex">
-      <form method="post" action="/">
-        <input
-          type="url"
-          name="uri"
-          class="w-[1250px] h-[100px] bg-[#0000ff67]"
-          placeholder="Enter URI"
-        />
-        <button type="submit" class="w-[126px] h-[100px] bg-[#00800067]">
-          <strong>검색</strong>
-        </button>
-      </form>
-
-      <button
-        class="bg-[#ffff007d] w-[200px] h-[100px]"
-        onclick="onClickAllContents()"
-      >
-        <strong>상세 데이터 조회</strong>
-      </button>
-      <button
-        class="bg-[#ff006f7d] w-[200px] h-[100px]"
-        onclick="onExcelDownload()"
-      >
-        <strong>Excel 다운로드</strong>
-      </button>
-    </div>
-
-    <script>
-      function showDetail() {
-        // 상세 데이터 조회 로직을 여기에 작성합니다.
-      }
-
-      function onClickAllContents() {
-        // 모든 컨텐츠를 조회하는 로직을 여기에 작성합니다.
-      }
-
-      function onExcelDownload() {
-        // Excel 다운로드 로직을 여기에 작성합니다.
-      }
-    </script>
+    <div>ddd</div>
   </body>
 </html>
