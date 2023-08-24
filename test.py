@@ -1,40 +1,61 @@
-import pymysql
+from flask import Flask, jsonify, request
+from sqlalchemy import create_engine, Column, String, Integer, or_
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.declarative import declarative_base
 
-connection = pymysql.connect(
-    host='192.168.0.37',  
-    port=3306,  
-    user='localDB',
-    password='flatcebo',
-    db='crawling',  
-    charset='utf8'
-)
+app = Flask(__name__)
 
-cur = connection.cursor()
-
-result = "ddd"
+# SQLAlchemy 설정
+DATABASE_URL = "mysql+pymysql://localDB:flatcebo@192.168.0.37:3306/crawling?charset=utf8"
+engine = create_engine(DATABASE_URL, echo=True,isolation_level="READ_UNCOMMITTED", connect_args={"charset": "utf8mb4"} )
+Session = sessionmaker(bind=engine)
+Base = declarative_base()
 
 
-# print(cur.execute(
-#     "SELECT * FROM TB_Dinak_Master_21 ORDER BY id ASC LIMIT 0,100"
-# ))
+class Test(Base):
+    __tablename__ = 'Test'
 
-# cur.execute(
-#     "CREATE TABLE userTable (id char(4), userName char(15))"
-# )
-try:
-    with connection.cursor() as cursor:
-        # SQL 쿼리 작성
-        sql = "INSERT INTO userTable (id, userName) VALUES (%s, %s)"
+    id = Column(Integer, primary_key=True)
+    userId = Column(String)
+    title = Column(String)
+    userName = Column(String)
+    mainNumber = Column(String)
+
+@app.route('/api/read', methods=['GET'])
+def query_database():
+    # keyword = request.args.get('keyword')
+
+    # if not keyword:
+    #     return jsonify({"message": "Keyword is missing"}), 400
+
+    session = Session()
+
+    try:
         
-        # VALUES에 들어갈 데이터
-        data = (result, '값2')
+        categories = session.query(Test).\
+            filter(Test.userId)
         
-        # SQL 실행
-        cursor.execute(sql, data)
-        
-    # 변경사항 커밋
-    connection.commit()
+        unique_categories = set()
+        for category in categories:
+            unique_categories.add((category.userId, category.title, category.userName, category.mainNumber))
 
-finally:
-    # 연결 종료
-    connection.close()
+        result = []
+        for category in categories:
+            result.append({
+                "userId": category.userId,
+                "title": category.title,
+                "userName": category.userName,
+                "mainNumber": category.mainNumber
+            })
+
+        return jsonify({"categories": result})
+
+    except Exception as e:
+        session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+    finally:
+        session.close()
+
+if __name__ == '__main__':
+    app.run(debug=True)
